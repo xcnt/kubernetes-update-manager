@@ -37,8 +37,7 @@ dockerBuildRuntime(label: label) {
         try {
             container('docker') {
                 sh """
-                docker run --rm -t testcontainer go vet ./... > govet.xml
-                docker run --rm -t testcontainer golint ./... > golint.xml
+                docker run -v \$(pwd):/app --rm -t testcontainer bash scripts/run-golint.sh
                 """
             }
         } finally {
