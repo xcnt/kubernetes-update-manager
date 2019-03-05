@@ -19,6 +19,18 @@ dockerBuildRuntime(label: label) {
         }
     }
 
+    stage('Identify LOC') {
+        container('docker') {
+            try {
+                sh("""
+                docker run -v \$(pwd):/data --rm -t mribeiro/cloc --not-match-f cloc.xml --exclude-d vendor --xml --out=cloc.xml .
+                """)
+            } finally {
+                sloccountPublish(encoding: '', pattern: '')
+            }
+        }
+    }
+
     stage('Run Unit Tests') {
         container('docker') {
             try {
