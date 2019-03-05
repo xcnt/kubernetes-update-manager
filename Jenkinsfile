@@ -4,28 +4,6 @@ def project = 'xcnt-infrastructure'
 def appName = 'kubernetes-update-manager'
 def label = "${appName}_${env.BRANCH_NAME}"
 
-@NonCPS
-Boolean includesTest(File directory) {
-    return new File("${directory.GetName()}/common_test.go").exists()
-}
-
-@NonCPS
-Set<String> findTestDirs(String dirName)
-{
-    Set dirList = []
-    new File(workspace).eachDir()
-    {
-        dir -> 
-        if (!dir.getName().trim.endsWith('vendor')) {
-            if (!dir.getName().startsWith('.') && includesTest(dir)) {
-                dirList.add(dir.getName())
-            }
-            dirList.addAll(findTestDirs(dir.getName()))
-        }
-    }
-    dirList
-}
-
 dockerBuildRuntime(label: label) {
     def myRepo = checkout scm
     def image = "eu.gcr.io/${project}/${appName}"
@@ -44,13 +22,9 @@ dockerBuildRuntime(label: label) {
     stage('Run Unit Tests') {
         container('docker') {
             try {
-                def directories = findTestDirs('.')
-                directories.each { testDirectory -> 
-                    xunit = sh(returnStdout: true, script: """
-                                                docker run -t testcontainer -w "${testDirectory}" "go test -gocheck.vv | go2xunit -gocheck"
-                                                """).trim()
-                    writeFile(file: "${testDirectory}/xunit.xml", text: xunit)
-                }
+                sh("""
+                docker run -v \$(pwd):/app --rm -i -t testcontainer bash scripts/run-xunit-tests.sh
+                """)
             }
             finally {
                 junit '**/xunit.xml'
@@ -62,8 +36,8 @@ dockerBuildRuntime(label: label) {
         try {
             container('docker') {
                 sh """
-                docker run -t testcontainer go vet ./... > govet.xml
-                docker run -t testcontainer golint ./... > golint.xml
+                docker run --rm -t testcontainer go vet ./... > govet.xml
+                docker run --rm -t testcontainer golint ./... > golint.xml
                 """
             }
         } finally {

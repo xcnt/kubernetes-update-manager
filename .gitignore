@@ -16,7 +16,10 @@
 *.out
 
 ### Go Patch ###
-/vendor/
 /Godeps/
 
 # End of https://www.gitignore.io/api/go
+
+xunit.xml
+govet.xml
+golint.xml
