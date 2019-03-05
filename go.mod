@@ -19,6 +19,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
+	github.com/t-yuki/gocover-cobertura v0.0.0-20180217150009-aaee18c8195c // indirect
 	github.com/tebeka/go2xunit v1.4.10 // indirect
 	golang.org/x/crypto v0.0.0-20190228050851-31a38585487a // indirect
 	golang.org/x/lint v0.0.0-20190301231843-5614ed5bae6f // indirect

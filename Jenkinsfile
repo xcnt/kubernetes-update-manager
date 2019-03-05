@@ -23,11 +23,12 @@ dockerBuildRuntime(label: label) {
         container('docker') {
             try {
                 sh("""
-                docker run -v \$(pwd):/app --rm -i -t testcontainer bash scripts/run-xunit-tests.sh
+                docker run -v \$(pwd):/app --rm -t testcontainer bash scripts/run-xunit-tests.sh
                 """)
             }
             finally {
                 junit '**/xunit.xml'
+                cobertura coberturaReportFile: '**/coverage.xml'
             }
         }
     }

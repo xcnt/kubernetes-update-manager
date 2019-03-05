@@ -1,2 +1,8 @@
 .editorconifg
 .gitignore
+*.out
+/Godeps/
+xunit.xml
+govet.xml
+golint.xml
+coverage.xml

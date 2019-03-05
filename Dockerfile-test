@@ -3,6 +3,7 @@ FROM golang:alpine
 RUN apk add --update git alpine-sdk bash
 RUN go get github.com/tebeka/go2xunit
 RUN go get golang.org/x/lint/golint
+RUN go get github.com/t-yuki/gocover-cobertura
 WORKDIR /app
 
 ENV GOFLAGS -mod=vendor 
