@@ -26,7 +26,7 @@ dockerBuildRuntime(label: label) {
                 docker run -v \$(pwd):/data --rm -t mribeiro/cloc --not-match-f cloc.xml --exclude-d vendor --xml --out=cloc.xml .
                 """)
             } finally {
-                sloccountPublish(encoding: '', pattern: '')
+                sloccountPublish(pattern: 'cloc.xml')
             }
         }
     }
