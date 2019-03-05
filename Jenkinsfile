@@ -33,11 +33,16 @@ dockerBuildRuntime(label: label) {
 
     loginToDocker()
 
-    stage('Run Unit Tests') {
+    stage('Build test image') {
         container('docker') {
             sh """
-            docker build -t testcontainer -f Dockerfile.test .
+            docker build -t testcontainer -f Dockerfile-test .
             """
+        }
+    }
+
+    stage('Run Unit Tests') {
+        container('docker') {
             try {
                 def directories = findTestDirs('.')
                 directories.each { testDirectory -> 

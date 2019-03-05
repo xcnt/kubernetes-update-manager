@@ -1,0 +1,7 @@
+FROM golang:alpine
+
+RUN go get github.com/tebeka/go2xunit
+RUN go get github.com/golang/lint/golint
+WORKDIR /app
+
+ADD . /app
