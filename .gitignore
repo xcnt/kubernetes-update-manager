@@ -25,3 +25,7 @@ govet.xml
 golint.xml
 coverage.xml
 cloc.xml
+
+web/docs/**/*.go
+web/docs/**/*.json
+web/docs/**/*.yaml

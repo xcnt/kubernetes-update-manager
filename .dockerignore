@@ -6,3 +6,4 @@ xunit.xml
 govet.xml
 golint.xml
 coverage.xml
+web/docs/**/*.go

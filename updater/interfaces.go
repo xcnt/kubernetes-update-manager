@@ -1,6 +1,8 @@
 package updater
 
 import (
+	"time"
+
 	v1 "k8s.io/api/apps/v1"
 	batchv1 "k8s.io/api/batch/v1"
 	appsV1 "k8s.io/client-go/kubernetes/typed/apps/v1"
@@ -44,8 +46,10 @@ type UpdateProgress interface {
 	GetDeployments() []*v1.Deployment
 	// FinishedJobsCount returns how many jobs have been finished
 	FinishedJobsCount() int
-	// UpdatedDeployments returns the amount of deployments which update has been finished
+	// UpdatedDeploymentsCount returns the amount of deployments which update has been finished
 	UpdatedDeploymentsCount() int
+	// FinishTime returns when the progress was finished. If the update hasn't finished yet, this will return nil
+	FinishTime() *time.Time
 	// Finished returns if the update progress has run through succesfully or unsuccessfully
 	Finished() bool
 	// Failed returns if the update is marked as failed

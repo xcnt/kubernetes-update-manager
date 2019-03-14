@@ -22,6 +22,7 @@ type updateProgressConfiguration struct {
 	jobs        []*batchv1.Job
 	deployments []*v1.Deployment
 	failed      bool
+	finishTime  *time.Time
 }
 
 // GetJobs returns a list of jobs which are included in the update progress
@@ -46,7 +47,19 @@ func (up *updateProgressConfiguration) Successful() bool {
 
 // Finished returns if the update progress has run through succesfully or unsuccessfully
 func (up *updateProgressConfiguration) Finished() bool {
-	return up.Failed() || up.Successful()
+	if up.Failed() || up.Successful() {
+		up.setFinishTimeIfNecessary()
+		return true
+	} else {
+		return false
+	}
+}
+
+func (up *updateProgressConfiguration) setFinishTimeIfNecessary() {
+	if up.finishTime == nil {
+		finishTime := time.Now()
+		up.finishTime = &finishTime
+	}
 }
 
 // Abort cancels the run of this specific udpater.
@@ -74,6 +87,11 @@ func (up *updateProgressConfiguration) UpdatedDeploymentsCount() int {
 		}
 	}
 	return count
+}
+
+// FinishTime returns when the progress was finished. If the update hasn't finished yet, this will return nil.
+func (up *updateProgressConfiguration) FinishTime() *time.Time {
+	return up.finishTime
 }
 
 // Update executes the passed update plan against the given kubernetes wrapper asynchronously
