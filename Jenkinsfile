@@ -59,6 +59,14 @@ dockerBuildRuntime(label: label) {
     }
 
     stage('Build image') {
+        def versionPrefix = "dev"
+        if (env.BRANCH_NAME == "master") {
+            versionPrefix = "stable"
+        }
+        sh """
+        sed -i 's/^Version = .*$/Version = \"${versionPrefix}-$(date +%Y%m%d%H%m%S)\"/' cli/version.go
+        """
+
         container('docker') {
             imageWithTag = buildImage(image, env.BRANCH_NAME, myRepo.GIT_COMMIT)
         }
