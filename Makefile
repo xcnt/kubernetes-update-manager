@@ -7,3 +7,6 @@ generate_mocks:
 	sed 's%x "."%x "kubernetes-update-manager/updater"%g' updater/manager/updateProgressMock_test.go > updater/manager/updateProgressMock_test_sed.go
 	mv updater/manager/updateProgressMock_test_sed.go updater/manager/updateProgressMock_test.go
 	mockgen -package=updater -source=updater/interfaces.go MatchConfig > updater/matcherMock_test.go
+
+cloc:
+	cloc --not-match-f="(cloc.xml|swagger.*|cover.out|coverage.xml|xunit.xml)" --exclude-d vendor .
