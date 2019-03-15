@@ -16,7 +16,7 @@ dockerBuildRuntime(label: label) {
             def buildCache = "eu.gcr.io/${project}/${appName}-build-test:latest"
             sh """
             docker pull "${buildCache}" || "No docker cache found" || true
-            docker build --cache-from ${buildCache} -t ${buildCache} --target builder .
+            docker build --cache-from ${buildCache} -t ${buildCache} --target build-env .
             docker push ${buildCache}
             docker build --cache-from ${buildCache} -t testcontainer -f Dockerfile-test .
             """
