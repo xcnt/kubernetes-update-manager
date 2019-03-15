@@ -4,10 +4,15 @@ import (
 	"os"
 
 	"kubernetes-update-manager/cli"
+
+	"github.com/gookit/color"
 )
 
 func main() {
 	app := cli.New()
 
-	app.Run(os.Args)
+	err := app.Run(os.Args)
+	if err != nil {
+		color.Error.Println(err)
+	}
 }

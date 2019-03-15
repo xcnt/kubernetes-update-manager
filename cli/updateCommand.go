@@ -17,7 +17,6 @@ var (
 	// FlagURL is the target URL to the remote server.
 	FlagURL = &cli.StringFlag{
 		Name:    "url",
-		Aliases: []string{"u"},
 		Usage:   "The url where the update manager resides in. This must be the complete path! Use http://xcnt.io/updates instead of https://xcnt.io/",
 		EnvVars: []string{"UPDATE_MANGER_URL"},
 	}
