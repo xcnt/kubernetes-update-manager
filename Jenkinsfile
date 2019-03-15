@@ -64,7 +64,7 @@ dockerBuildRuntime(label: label) {
             versionPrefix = "stable"
         }
         sh """
-        sed -i 's/^Version = .*$/Version = \"${versionPrefix}-$(date +%Y%m%d%H%m%S)\"/' cli/version.go
+        sed -i 's/^Version = .*$/Version = \"${versionPrefix}-\$(date +%Y%m%d%H%m%S)\"/' cli/version.go
         """
 
         container('docker') {
