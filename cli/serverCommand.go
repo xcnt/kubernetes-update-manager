@@ -90,7 +90,13 @@ func ServerAction(c *cli.Context) error {
 	}
 
 	server := web.GetWeb(config)
-	err = server.Run(fmt.Sprintf("%s:%d", c.String(FlagHost.Name), c.Int(FlagPort.Name)))
+	host := c.String(FlagHost.Name)
+	if host != "0.0.0.0" {
+		host = fmt.Sprintf(":%d", c.Int(FlagPort.Name))
+	} else {
+		host = fmt.Sprintf("%s:%d", host, c.Int(FlagPort.Name))
+	}
+	err = server.Run(host)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
