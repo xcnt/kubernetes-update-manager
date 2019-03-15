@@ -35,7 +35,7 @@ dockerBuildRuntime(label: label) {
         container('docker') {
             try {
                 sh("""
-                docker run -v \$(pwd):/app --rm -t testcontainer bash scripts/run-xunit-tests.sh
+                docker run -v \$(pwd):/app --rm -t testcontainer make xunit
                 """)
             }
             finally {
@@ -49,7 +49,7 @@ dockerBuildRuntime(label: label) {
         try {
             container('docker') {
                 sh """
-                docker run -v \$(pwd):/app --rm -t testcontainer bash scripts/run-golint.sh
+                docker run -v \$(pwd):/app --rm -t testcontainer make lint
                 """
             }
         } finally {
