@@ -15,11 +15,13 @@ require (
 	github.com/golang/mock v1.2.0
 	github.com/golang/protobuf v1.3.0 // indirect
 	github.com/google/btree v0.0.0-20180813153112-4030bb1f1f0c // indirect
+	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/google/gofuzz v0.0.0-20170612174753-24818f796faf // indirect
 	github.com/google/uuid v1.1.1
 	github.com/googleapis/gnostic v0.2.0 // indirect
 	github.com/gregjones/httpcache v0.0.0-20190212212710-3befbb6ad0cc // indirect
 	github.com/kr/pretty v0.1.0 // indirect
+	github.com/levigross/grequests v0.0.0-20190130132859-37c80f76a0da
 	github.com/mattn/go-isatty v0.0.6 // indirect
 	github.com/mdempsky/gocode v0.0.0-20190203001940-7fb65232883f // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
@@ -35,6 +37,7 @@ require (
 	golang.org/x/time v0.0.0-20181108054448-85acf8d2951c // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127
 	gopkg.in/inf.v0 v0.9.1 // indirect
+	gopkg.in/jarcoal/httpmock.v1 v1.0.0-20190314184232-a8ac0a50d0b5
 	gopkg.in/urfave/cli.v2 v2.0.0-20180128182452-d3ae77c26ac8
 	k8s.io/api v0.0.0-20190111032252-67edc246be36
 	k8s.io/apimachinery v0.0.0-20190223094358-dcb391cde5ca

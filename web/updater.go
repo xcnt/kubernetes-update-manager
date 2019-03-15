@@ -101,7 +101,7 @@ func (updateHandler *UpdaterHandler) Post(context *gin.Context) {
 		context.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
-	context.JSON(http.StatusOK, serializeUpdateProgress(updateProgress))
+	context.JSON(http.StatusCreated, serializeUpdateProgress(updateProgress))
 }
 
 // Delete represents the DELETE method to remove an update request from the manager.

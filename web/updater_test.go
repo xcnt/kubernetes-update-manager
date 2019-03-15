@@ -107,7 +107,7 @@ func (suite *UpdaterTestSuite) TestPost(c *C) {
 	req := suite.PostRequestComplete()
 
 	router.ServeHTTP(w, req)
-	c.Assert(w.Code, Equals, http.StatusOK)
+	c.Assert(w.Code, Equals, http.StatusCreated)
 	buffer := bytes.Buffer{}
 	buffer.ReadFrom(w.Body)
 	response := &UpdateProgressSerialized{}
@@ -124,7 +124,7 @@ func (suite *UpdaterTestSuite) TestPostNoAutloadNamespaces(c *C) {
 	req := suite.PostRequestComplete()
 
 	router.ServeHTTP(w, req)
-	c.Assert(w.Code, Equals, http.StatusOK)
+	c.Assert(w.Code, Equals, http.StatusCreated)
 	buffer := bytes.Buffer{}
 	buffer.ReadFrom(w.Body)
 	response := &UpdateProgressSerialized{}
@@ -151,7 +151,7 @@ func (suite *UpdaterTestSuite) TestGetWithUUID(c *C) {
 	req := suite.PostRequestComplete()
 
 	router.ServeHTTP(w, req)
-	c.Assert(w.Code, Equals, http.StatusOK)
+	c.Assert(w.Code, Equals, http.StatusCreated)
 	buffer := bytes.Buffer{}
 	buffer.ReadFrom(w.Body)
 	response := &UpdateProgressSerialized{}
@@ -196,7 +196,7 @@ func (suite *UpdaterTestSuite) TestDeleteWithExisting(c *C) {
 	req := suite.PostRequestComplete()
 
 	router.ServeHTTP(w, req)
-	c.Assert(w.Code, Equals, http.StatusOK)
+	c.Assert(w.Code, Equals, http.StatusCreated)
 	buffer := bytes.Buffer{}
 	buffer.ReadFrom(w.Body)
 	response := &UpdateProgressSerialized{}
