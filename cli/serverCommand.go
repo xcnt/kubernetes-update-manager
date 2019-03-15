@@ -19,7 +19,7 @@ var (
 		Value:       "0.0.0.0",
 		DefaultText: "Listens to all hosts in default",
 		Usage:       "The host where the application should listen to",
-		EnvVars:     []string{"UPDATE_MANGER_HOST"},
+		EnvVars:     []string{"UPDATE_MANGER_LISTENING_HOST"},
 	}
 	// FlagPort is used to configure the listening port when running a server
 	FlagPort = &cli.IntFlag{
@@ -28,7 +28,7 @@ var (
 		Value:       9000,
 		DefaultText: "Listens to port 9000",
 		Usage:       "The port the server uses to host it's API on",
-		EnvVars:     []string{"UPDATE_MANAGER_PORT"},
+		EnvVars:     []string{"UPDATE_MANAGER_LISTENING_PORT"},
 	}
 	// FlagAutoloadNamespaces specifies if namespaces should automatically be loaded from the cluster
 	FlagAutoloadNamespaces = &cli.BoolFlag{
