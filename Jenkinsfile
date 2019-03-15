@@ -23,7 +23,7 @@ dockerBuildRuntime(label: label) {
         container('docker') {
             try {
                 sh("""
-                docker run -v \$(pwd):/data --rm -t mribeiro/cloc --not-match-f cloc.xml --exclude-d vendor --xml --out=cloc.xml .
+                docker run -v \$(pwd):/data --rm -t mribeiro/cloc --not-match-f="(cloc.xml|swagger.*|cover.out|coverage.xml|xunit.xml)" --exclude-d vendor --xml --out=cloc.xml .
                 """)
             } finally {
                 sloccountPublish(pattern: 'cloc.xml')
