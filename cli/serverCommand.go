@@ -80,6 +80,7 @@ func ServerCommand() *cli.Command {
 func ServerAction(c *cli.Context) error {
 	config, err := webConfigFromContext(c)
 	if err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 
@@ -89,7 +90,11 @@ func ServerAction(c *cli.Context) error {
 	}
 
 	server := web.GetWeb(config)
-	return server.Run(fmt.Sprintf("%s:%d", c.String(FlagHost.Name), c.Int(FlagPort.Name)))
+	err = server.Run(fmt.Sprintf("%s:%d", c.String(FlagHost.Name), c.Int(FlagPort.Name)))
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return err
 }
 
 // webConfigFromContext takes the cli context for the web server, checks for necessary options and returns an initialized web configuration option.
