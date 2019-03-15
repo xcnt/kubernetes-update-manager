@@ -12,4 +12,6 @@ type Config struct {
 	// AutoloadNamespaces is a toggle scanning the cluster for all namespaces when applying the update configuration and sets all namespaces
 	// as the update candidate.
 	AutoloadNamespaces bool
+	// APIKey is a pre shared key which is used to authenticate requests against the update endpoints.
+	APIKey string
 }

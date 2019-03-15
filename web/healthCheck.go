@@ -6,6 +6,11 @@ import (
 )
 
 // CheckHealth can be used as a health endpoint to verify that the API is accessible.
+// @Summary Check Health of API
+// @Description Tries to reach the kubernetes API and returns if it can be reached.
+// @Success 204
+// @Failure 500
+// @Router /health [get]
 func CheckHealth(config *Config) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		clientSet := config.Clientset

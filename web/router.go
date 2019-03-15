@@ -1,6 +1,8 @@
 package web
 
 import (
+	"kubernetes-update-manager/updater/manager"
+
 	"github.com/getsentry/raven-go"
 	"github.com/gin-contrib/sentry"
 	"github.com/gin-gonic/gin"
@@ -19,24 +21,34 @@ import (
 // @license.name MIT
 // @license.url https://tldrlegal.com/license/mit-license
 
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
+
 // GetWeb returns the initialized web engine.
 func GetWeb(config *Config) *gin.Engine {
+	engine, _ := getWeb(config)
+	return engine
+}
+
+func getWeb(config *Config) (*gin.Engine, *manager.Manager) {
 	router := gin.New()
 	router.Use(sentry.Recovery(raven.DefaultClient, false))
 
-	registerRoutes(router, config)
-	return router
+	mgr := registerRoutes(router, config)
+	return router, mgr
 }
 
-func registerRoutes(router *gin.Engine, config *Config) {
+func registerRoutes(router *gin.Engine, config *Config) *manager.Manager {
 	router.GET("/health", CheckHealth(config))
 	router.GET("/swagger/*any", ginSwagger.DisablingWrapHandler(swaggerFiles.Handler, "NAME_OF_ENV_VARIABLE"))
-	registerUpdaterRoutes(router, config)
+	return registerUpdaterRoutes(router, config)
 }
 
-func registerUpdaterRoutes(router *gin.Engine, config *Config) {
+func registerUpdaterRoutes(router *gin.Engine, config *Config) *manager.Manager {
 	updater := NewUpdaterHandler(config)
 	router.GET("/updates/:uuid", updater.GetItem)
 	router.DELETE("/updates/:uuid", updater.Delete)
 	router.POST("/updates", updater.Post)
+	return updater.manager
 }
