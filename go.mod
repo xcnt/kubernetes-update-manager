@@ -35,6 +35,7 @@ require (
 	golang.org/x/time v0.0.0-20181108054448-85acf8d2951c // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127
 	gopkg.in/inf.v0 v0.9.1 // indirect
+	gopkg.in/urfave/cli.v2 v2.0.0-20180128182452-d3ae77c26ac8
 	k8s.io/api v0.0.0-20190111032252-67edc246be36
 	k8s.io/apimachinery v0.0.0-20190223094358-dcb391cde5ca
 	k8s.io/client-go v10.0.0+incompatible

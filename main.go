@@ -1,18 +1,13 @@
 package main
 
 import (
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/rest"
+	"os"
+
+	"kubernetes-update-manager/cli"
 )
 
 func main() {
-	config, err := rest.InClusterConfig()
-	if err != nil {
-		panic(err.Error())
-	}
-	_, err = kubernetes.NewForConfig(config)
-	if err != nil {
-		panic(err.Error())
-	}
+	app := cli.New()
 
+	app.Run(os.Args)
 }
