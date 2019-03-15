@@ -127,6 +127,8 @@ gopkg.in/check.v1
 gopkg.in/go-playground/validator.v8
 # gopkg.in/inf.v0 v0.9.1
 gopkg.in/inf.v0
+# gopkg.in/urfave/cli.v2 v2.0.0-20180128182452-d3ae77c26ac8
+gopkg.in/urfave/cli.v2
 # gopkg.in/yaml.v2 v2.2.2
 gopkg.in/yaml.v2
 # k8s.io/api v0.0.0-20190111032252-67edc246be36
