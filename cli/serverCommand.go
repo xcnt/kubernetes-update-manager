@@ -16,7 +16,6 @@ var (
 	// FlagHost is used to configure the listening host when running a server
 	FlagHost = &cli.StringFlag{
 		Name:        "host",
-		Aliases:     []string{"h"},
 		Value:       "0.0.0.0",
 		DefaultText: "Listens to all hosts in default",
 		Usage:       "The host where the application should listen to",
