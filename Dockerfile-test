@@ -11,4 +11,3 @@ WORKDIR /app
 ENV GOFLAGS -mod=vendor 
 ADD . /app
 RUN make generate_swagger
-RUN go build .
