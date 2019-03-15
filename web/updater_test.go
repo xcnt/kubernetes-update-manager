@@ -22,12 +22,24 @@ type UpdaterTestSuite struct {
 
 var _ = Suite(&UpdaterTestSuite{})
 
+func (suite *UpdaterTestSuite) TestGetUnauthorized(c *C) {
+	searchUUID := uuid.New().String()
+
+	w := suite.recorder
+	router := suite.router
+	req, _ := http.NewRequest("GET", fmt.Sprintf("/updates/%s", searchUUID), nil)
+	router.ServeHTTP(w, req)
+
+	c.Assert(w.Code, Equals, http.StatusUnauthorized)
+}
+
 func (suite *UpdaterTestSuite) TestGetNotFound(c *C) {
 	searchUUID := uuid.New().String()
 
 	w := suite.recorder
 	router := suite.router
 	req, _ := http.NewRequest("GET", fmt.Sprintf("/updates/%s", searchUUID), nil)
+	suite.Authenticate(req)
 	router.ServeHTTP(w, req)
 
 	c.Assert(w.Code, Equals, http.StatusNotFound)
@@ -37,6 +49,7 @@ func (suite *UpdaterTestSuite) TestGetInvalidUUID(c *C) {
 	w := suite.recorder
 	router := suite.router
 	req, _ := http.NewRequest("GET", "/updates/abc", nil)
+	suite.Authenticate(req)
 	router.ServeHTTP(w, req)
 
 	c.Assert(w.Code, Equals, http.StatusBadRequest)
@@ -46,6 +59,7 @@ func (suite *UpdaterTestSuite) PostRequestWith(data url.Values) *http.Request {
 	req, _ := http.NewRequest("POST", "/updates", strings.NewReader(data.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
+	suite.Authenticate(req)
 	return req
 }
 
@@ -54,6 +68,15 @@ func (suite *UpdaterTestSuite) PostRequestComplete() *http.Request {
 	data.Set(ImageParam, "xcnt/test:1.0.0")
 	data.Set(UpdateClassifierParam, "stable")
 	return suite.PostRequestWith(data)
+}
+
+func (suite *UpdaterTestSuite) TestPostUnauthorized(c *C) {
+	w := suite.recorder
+	router := suite.router
+	req, _ := http.NewRequest("POST", "/updates", nil)
+	router.ServeHTTP(w, req)
+
+	c.Assert(w.Code, Equals, http.StatusUnauthorized)
 }
 
 func (suite *UpdaterTestSuite) TestPostNoImage(c *C) {
@@ -137,6 +160,7 @@ func (suite *UpdaterTestSuite) TestGetWithUUID(c *C) {
 
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("GET", fmt.Sprintf("/updates/%s", response.UUID), nil)
+	suite.Authenticate(req)
 	router.ServeHTTP(w, req)
 
 	c.Assert(w.Code, Equals, http.StatusOK)
@@ -147,10 +171,20 @@ func (suite *UpdaterTestSuite) TestGetWithUUID(c *C) {
 	c.Assert(getResponse.UUID, Equals, response.UUID)
 }
 
+func (suite *UpdaterTestSuite) TestDeleteUnauthorized(c *C) {
+	w := suite.recorder
+	router := suite.router
+	req, _ := http.NewRequest("DELETE", fmt.Sprintf("/updates/%s", uuid.New().String()), nil)
+	router.ServeHTTP(w, req)
+
+	c.Assert(w.Code, Equals, http.StatusUnauthorized)
+}
+
 func (suite *UpdaterTestSuite) TestDelete(c *C) {
 	w := suite.recorder
 	router := suite.router
 	req, _ := http.NewRequest("DELETE", fmt.Sprintf("/updates/%s", uuid.New().String()), nil)
+	suite.Authenticate(req)
 
 	router.ServeHTTP(w, req)
 	c.Assert(w.Code, Equals, http.StatusNoContent)
@@ -171,12 +205,14 @@ func (suite *UpdaterTestSuite) TestDeleteWithExisting(c *C) {
 
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("DELETE", fmt.Sprintf("/updates/%s", response.UUID), nil)
+	suite.Authenticate(req)
 	router.ServeHTTP(w, req)
 
 	c.Assert(w.Code, Equals, http.StatusNoContent)
 
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("GET", fmt.Sprintf("/updates/%s", response.UUID), nil)
+	suite.Authenticate(req)
 	router.ServeHTTP(w, req)
 
 	c.Assert(w.Code, Equals, http.StatusNotFound)

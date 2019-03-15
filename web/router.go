@@ -1,7 +1,10 @@
 package web
 
 import (
+	"crypto/subtle"
 	"kubernetes-update-manager/updater/manager"
+	"net/http"
+	"strings"
 
 	"github.com/getsentry/raven-go"
 	"github.com/gin-contrib/sentry"
@@ -47,8 +50,33 @@ func registerRoutes(router *gin.Engine, config *Config) *manager.Manager {
 
 func registerUpdaterRoutes(router *gin.Engine, config *Config) *manager.Manager {
 	updater := NewUpdaterHandler(config)
-	router.GET("/updates/:uuid", updater.GetItem)
-	router.DELETE("/updates/:uuid", updater.Delete)
-	router.POST("/updates", updater.Post)
+	authCheck := RequireAuth(config.APIKey)
+	router.GET("/updates/:uuid", authCheck, updater.GetItem)
+	router.DELETE("/updates/:uuid", authCheck, updater.Delete)
+	router.POST("/updates", authCheck, updater.Post)
 	return updater.manager
+}
+
+// RequireAuth returns a usable middleware who includes authorization checks in the given endpoint.
+func RequireAuth(apiKey string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		authorization := c.GetHeader("Authorization")
+		authorizationData := strings.SplitN(authorization, " ", 2)
+		authorizationString := authorizationData[len(authorizationData)-1]
+
+		if SecureCompare(authorizationString, apiKey) {
+			c.Next()
+		} else {
+			c.AbortWithStatus(http.StatusUnauthorized)
+		}
+	}
+}
+
+// SecureCompare compares two strings in a time constant way to avoid possible timing attacks on the password check.
+func SecureCompare(left, right string) bool {
+	for len(left) < len(right) {
+		left += " "
+	}
+	left = left[:len(right)]
+	return subtle.ConstantTimeCompare([]byte(left), []byte(right)) == 1
 }

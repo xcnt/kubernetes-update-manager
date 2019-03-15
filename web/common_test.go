@@ -1,6 +1,9 @@
 package web
 
 import (
+	"fmt"
+	"math/rand"
+	"net/http"
 	"net/http/httptest"
 	"testing"
 
@@ -8,6 +11,16 @@ import (
 	. "gopkg.in/check.v1"
 	testclient "k8s.io/client-go/kubernetes/fake"
 )
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func RandStringRunes(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
+}
 
 // Hook up gocheck into the "go test" runner.
 func Test(t *testing.T) { TestingT(t) }
@@ -26,6 +39,12 @@ func (suite *GenericWebTestSuite) SetUpTest(c *C) {
 	suite.config = &Config{
 		Clientset:          suite.clientset,
 		AutoloadNamespaces: true,
+		APIKey:             RandStringRunes(25),
 	}
 	suite.router = GetWeb(suite.config)
+}
+
+func (suite *GenericWebTestSuite) Authenticate(req *http.Request) *http.Request {
+	req.Header.Set("Authorization", fmt.Sprintf("APIKey %s", suite.config.APIKey))
+	return req
 }
