@@ -78,6 +78,7 @@ func ServerCommand() *cli.Command {
 
 // ServerAction is the action executed if the server command is chosen.
 func ServerAction(c *cli.Context) error {
+	fmt.Println("Starting server")
 	config, err := webConfigFromContext(c)
 	if err != nil {
 		fmt.Println(err.Error())
