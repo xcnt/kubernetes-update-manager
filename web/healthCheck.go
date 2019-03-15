@@ -15,7 +15,7 @@ import (
 func CheckHealth(config *Config) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		clientSet := config.Clientset
-		_, err := clientSet.Core().Nodes().List(metaV1.ListOptions{})
+		_, err := clientSet.AppsV1().Deployments("default").List(metaV1.ListOptions{})
 		if err != nil {
 			color.Error.Println(err.Error())
 			context.Status(500)
