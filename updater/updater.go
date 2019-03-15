@@ -50,9 +50,8 @@ func (up *updateProgressConfiguration) Finished() bool {
 	if up.Failed() || up.Successful() {
 		up.setFinishTimeIfNecessary()
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
 func (up *updateProgressConfiguration) setFinishTimeIfNecessary() {
