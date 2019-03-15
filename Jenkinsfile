@@ -16,9 +16,9 @@ dockerBuildRuntime(label: label) {
             def buildCache = "eu.gcr.io/${project}/${appName}-build-test:latest"
             sh """
             docker pull "${buildCache}" || "No docker cache found" || true
-            docker build --cache-from ${buildCache} -t ${buildCache} -f Dockerfile-test --target build-env .
+            docker build --cache-from ${buildCache} -t ${buildCache} -f Dockerfile-test .
             docker push ${buildCache}
-            docker build --cache-from ${buildCache} -t testcontainer -f Dockerfile-test .
+            docker tag ${buildCache} testcontainer
             """
         }
     }
@@ -72,7 +72,7 @@ dockerBuildRuntime(label: label) {
         """
 
         container('docker') {
-            imageWithTag = buildImage(image, env.BRANCH_NAME, myRepo.GIT_COMMIT)
+            imageWithTag = buildImage(image, env.BRANCH_NAME, myRepo.GIT_COMMIT, "build-env")
         }
     }
 
