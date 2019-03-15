@@ -36,7 +36,7 @@ func GetWeb(config *Config) *gin.Engine {
 
 func getWeb(config *Config) (*gin.Engine, *manager.Manager) {
 	router := gin.New()
-	router.Use(sentry.Recovery(raven.DefaultClient, false))
+	router.Use(gin.Logger(), gin.Recovery(), sentry.Recovery(raven.DefaultClient, false))
 
 	mgr := registerRoutes(router, config)
 	return router, mgr

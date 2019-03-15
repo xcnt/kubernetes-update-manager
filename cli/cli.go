@@ -11,6 +11,7 @@ func New() *cli.App {
 		Version: Version,
 		Commands: []*cli.Command{
 			ServerCommand(),
+			UpdateCommand(),
 		},
 	}
 	return app

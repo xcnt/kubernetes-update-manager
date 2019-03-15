@@ -22,4 +22,5 @@ USER appuser
 
 EXPOSE 9000
 
-CMD [ "kubernetes-update-manager", "server" ]
+ENTRYPOINT [ "/app/kubernetes-update-manager" ]
+CMD [ "server" ]

@@ -55,6 +55,11 @@ github.com/google/uuid
 github.com/googleapis/gnostic/OpenAPIv2
 github.com/googleapis/gnostic/compiler
 github.com/googleapis/gnostic/extensions
+# github.com/gosuri/uilive v0.0.0-20170323041506-ac356e6e42cd
+github.com/gosuri/uilive
+# github.com/gosuri/uiprogress v0.0.0-20170224063937-d0567a9d84a1
+github.com/gosuri/uiprogress
+github.com/gosuri/uiprogress/util/strutil
 # github.com/gregjones/httpcache v0.0.0-20190212212710-3befbb6ad0cc
 github.com/gregjones/httpcache
 github.com/gregjones/httpcache/diskcache
