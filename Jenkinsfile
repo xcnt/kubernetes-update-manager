@@ -13,8 +13,12 @@ dockerBuildRuntime(label: label) {
 
     stage('Build test image') {
         container('docker') {
+            def buildCache = "eu.gcr.io/${project}/${appName}-build-test:latest"
             sh """
-            docker build -t testcontainer -f Dockerfile-test .
+            docker pull "${buildCache}" || "No docker cache found" || true
+            docker build --cache-from ${buildCache} -t ${buildCache} --target builder .
+            docker push ${buildCache}
+            docker build --cache-from ${buildCache} -t testcontainer -f Dockerfile-test .
             """
         }
     }
