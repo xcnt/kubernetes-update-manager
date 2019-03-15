@@ -25,6 +25,7 @@ govet.xml
 golint.xml
 coverage.xml
 cloc.xml
+sloccount.sc
 
 web/docs/**/*.go
 web/docs/**/*.json
