@@ -17,6 +17,7 @@ WORKDIR /app
 COPY --from=build-env /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build-env /etc/passwd /etc/passwd
 COPY --from=build-env /app/kubernetes-update-manager /app/
+ENV GIN_MODE release
 
 USER appuser
 
