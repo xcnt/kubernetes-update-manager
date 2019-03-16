@@ -11,6 +11,9 @@ import (
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
+
+	// Side loading docs
+	_ "kubernetes-update-manager/web/docs"
 )
 
 // @title Kubernetes Update Manager API
@@ -30,13 +33,15 @@ import (
 
 // GetWeb returns the initialized web engine.
 func GetWeb(config *Config) *gin.Engine {
-	engine, _ := getWeb(config)
+	engine, _ := getWeb(config, true)
 	return engine
 }
 
-func getWeb(config *Config) (*gin.Engine, *manager.Manager) {
+func getWeb(config *Config, useMiddlewares bool) (*gin.Engine, *manager.Manager) {
 	router := gin.New()
-	router.Use(gin.Logger(), gin.Recovery(), sentry.Recovery(raven.DefaultClient, false))
+	if useMiddlewares {
+		router.Use(gin.Logger(), gin.Recovery(), sentry.Recovery(raven.DefaultClient, false))
+	}
 
 	mgr := registerRoutes(router, config)
 	return router, mgr
@@ -44,7 +49,7 @@ func getWeb(config *Config) (*gin.Engine, *manager.Manager) {
 
 func registerRoutes(router *gin.Engine, config *Config) *manager.Manager {
 	router.GET("/health", CheckHealth(config))
-	router.GET("/swagger/*any", ginSwagger.DisablingWrapHandler(swaggerFiles.Handler, "NAME_OF_ENV_VARIABLE"))
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	return registerUpdaterRoutes(router, config)
 }
 

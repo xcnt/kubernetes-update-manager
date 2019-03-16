@@ -136,7 +136,7 @@ func (suite *UpdaterTestSuite) TestPostNoAutloadNamespaces(c *C) {
 func (suite *UpdaterTestSuite) TestPostWithError(c *C) {
 	w := suite.recorder
 	req := suite.PostRequestComplete()
-	router, mgr := getWeb(suite.config)
+	router, mgr := getWeb(suite.config, false)
 	mgr.Plan = func(_ *updater.Config) (updater.UpdatePlan, error) {
 		return nil, errors.New("this is an error")
 	}

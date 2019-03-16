@@ -56,11 +56,11 @@ func serializeUpdateProgress(progress manager.UpdateProgress) *UpdateProgressSer
 		Counts: CountSerialized{
 			Deployments: ProgressCountSerialized{
 				Total:   len(progress.GetDeployments()),
-				Updated: progress.FinishedJobsCount(),
+				Updated: progress.UpdatedDeploymentsCount(),
 			},
 			Jobs: ProgressCountSerialized{
 				Total:   len(progress.GetJobs()),
-				Updated: progress.UpdatedDeploymentsCount(),
+				Updated: progress.FinishedJobsCount(),
 			},
 		},
 		Status: StatusSerialized{

@@ -41,7 +41,7 @@ func (suite *GenericWebTestSuite) SetUpTest(c *C) {
 		AutoloadNamespaces: true,
 		APIKey:             RandStringRunes(25),
 	}
-	suite.router = GetWeb(suite.config)
+	suite.router, _ = getWeb(suite.config, false)
 }
 
 func (suite *GenericWebTestSuite) Authenticate(req *http.Request) *http.Request {
