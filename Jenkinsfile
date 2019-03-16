@@ -79,4 +79,13 @@ dockerBuildRuntime(label: label) {
     stage('Publish') {
       publishImage(image, env.BRANCH_NAME, myRepo.GIT_COMMIT)
     }
+
+    stage('Deploy') {
+        def updateClassifier = env.BRANCH_NAME
+        if(updateClassifier == "master") {
+            updateClassifier = "stable"
+        }
+
+        deployXCNTImage(imageWithTag, updateClassifier)
+    }
 }
