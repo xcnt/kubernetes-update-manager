@@ -50,19 +50,19 @@ The server can additionally be configured with the following environment variabl
 <tr>
 <td><code>UPDATE_MANAGER_NAMESPACES</code></td>
 <td>A list of namespaces which should be scanned for an update. This is only used if autload of namespaces has been switched off. The namespaces should be added comma separated.</td>
-<td><code></code></td>
+<td></td>
 <td><code>false</code></td>
 </tr>
 <tr>
 <td><code>UPDATE_MANAGER_API_KEY</code></td>
 <td>The pre-shared API key used to authenticate API calls. This is a required field and must be set.</td>
-<td><code></code></td>
+<td></td>
 <td><code>true</code></td>
 </tr>
 <tr>
 <td><code>SENTRY_DSN</code></td>
-<td>The [sentry](https://sentry.io/welcome/) dsn which should be used when reporting errors from the server.</td>
-<td><code></code></td>
+<td>The <a href="https://sentry.io/welcome/">sentry</a> dsn which should be used when reporting errors from the server.</td>
+<td></td>
 <td><code>false</code></td>
 </tr>
 </tbody>
@@ -136,4 +136,4 @@ meaning the state of the application might need manual work to be restored to a 
 
 ## License ##
 
-The application is published under the [MIT License](LICENSE)
+The application is published under the [MIT License](LICENSE).
