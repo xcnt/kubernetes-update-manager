@@ -1,5 +1,7 @@
 # Kubernetes Update Manager #
 
+![Update Example](images/update-command.gif)
+
 This code allows to update deployments in a kubernetes cluster without needing to give cluster admin access to the updating entity. Instead an API is provided
 which handles the update process via pre-defined annotations in the specified deployment structure.
 

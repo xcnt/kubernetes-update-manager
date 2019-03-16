@@ -9,3 +9,4 @@ coverage.xml
 cloc.xml
 sloccount.sc
 web/docs/**/*.go
+images/
