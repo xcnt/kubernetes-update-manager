@@ -129,6 +129,11 @@ spec:
 
 If a update call is done with the classifier `stable` and the image `xcnt/test` it will execute a copy of this job once during the update process.
 
+## Error Handling ##
+
+If a deployment doesn't start or a job fails, a rollback of the deployments will be attempted. However, this does not reverse any jobs which have already been executed, 
+meaning the state of the application might need manual work to be restored to a previously compatible version.
+
 ## License ##
 
 The application is published under the [MIT License](LICENSE)
