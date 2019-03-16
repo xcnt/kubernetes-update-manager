@@ -125,7 +125,6 @@ func monitorUpdate(status client.ExecutionStatus) error {
 		if deploymentsProgress != nil {
 			deploymentsProgress.Set(deploymentsCount.Updated)
 		}
-		fmt.Printf("%+v\n", currentStatus)
 		finished = currentStatus.Status.Finished
 		time.Sleep(time.Second * 1)
 	}
