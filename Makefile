@@ -11,8 +11,8 @@ generate_mocks:
 cloc:
 	cloc --not-match-f="(cloc.xml|swagger.*|cover.out|coverage.xml|xunit.xml)" --exclude-d vendor .
 
-lint:
+lint: generate_swagger
 	bash ./scripts/run-golint.sh
 
-xunit:
+xunit: generate_swagger
 	bash ./scripts/run-xunit-tests.sh
