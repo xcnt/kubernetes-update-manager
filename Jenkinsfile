@@ -78,9 +78,13 @@ dockerBuildRuntime(label: label) {
 
     stage('Publish') {
       publishImage(image, env.BRANCH_NAME, myRepo.GIT_COMMIT)
+      if(env.BRANCH_NAME == "master") {
+        publishImageToPublicDocker("xcnt/kubernetes-update-manager", image, env.BRANCH_NAME, myRepo.GIT_COMMIT)
+      }
     }
 
     stage('Deploy') {
+        loginToDocker()
         def updateClassifier = env.BRANCH_NAME
         if(updateClassifier == "master") {
             updateClassifier = "stable"
