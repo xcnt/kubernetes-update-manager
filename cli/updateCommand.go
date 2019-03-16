@@ -96,11 +96,11 @@ func UpdateAction(c *cli.Context) error {
 func monitorUpdate(status client.ExecutionStatus) error {
 	finished := false
 
-	uiprogress.Start()
 	var err error
 	var currentStatus *web.UpdateProgressSerialized
 	var jobsProgress *uiprogress.Bar
 	var deploymentsProgress *uiprogress.Bar
+	uiprogress.Start()
 
 	for !finished {
 		currentStatus, err = status.Get()
@@ -111,18 +111,25 @@ func monitorUpdate(status client.ExecutionStatus) error {
 		jobsCount := currentStatus.Counts.Jobs
 		deploymentsCount := currentStatus.Counts.Deployments
 
-		if jobsProgress == nil {
+		if jobsProgress == nil && jobsCount.Total > 0 {
 			jobsProgress = addJobsBar(jobsCount.Total)
 		}
-		if deploymentsProgress == nil {
+		if deploymentsProgress == nil && deploymentsCount.Total > 0 {
 			deploymentsProgress = addDeploymentsBar(deploymentsCount.Total)
 		}
 
-		jobsProgress.Set(jobsCount.Updated)
-		deploymentsProgress.Set(deploymentsCount.Updated)
+		if jobsProgress != nil {
+			jobsProgress.Set(jobsCount.Updated)
+		}
+
+		if deploymentsProgress != nil {
+			deploymentsProgress.Set(deploymentsCount.Updated)
+		}
+		fmt.Printf("%+v\n", currentStatus)
 		finished = currentStatus.Status.Finished
 		time.Sleep(time.Second * 1)
 	}
+
 	if currentStatus.Status.Failed {
 		err = errors.New("Update failed")
 		color.Error.Println(err.Error())
@@ -144,7 +151,7 @@ func updateCommandFromContext(c *cli.Context) *client.UpdateCommand {
 func addJobsBar(totalJobs int) *uiprogress.Bar {
 	bar := uiprogress.AddBar(totalJobs).
 		AppendCompleted().
-		PrependFunc(func(b *uiprogress.Bar) string { return "jobs: " }).
+		PrependFunc(func(b *uiprogress.Bar) string { return fmt.Sprintf("%d jobs: ", totalJobs) }).
 		PrependElapsed()
 	return bar
 }
@@ -152,7 +159,7 @@ func addJobsBar(totalJobs int) *uiprogress.Bar {
 func addDeploymentsBar(totalDeployments int) *uiprogress.Bar {
 	bar := uiprogress.AddBar(totalDeployments).
 		AppendCompleted().
-		PrependFunc(func(b *uiprogress.Bar) string { return "deployments: " }).
+		PrependFunc(func(b *uiprogress.Bar) string { return fmt.Sprintf("%d deployments: ", totalDeployments) }).
 		PrependElapsed()
 	return bar
 }
