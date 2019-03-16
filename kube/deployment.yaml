@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: update-manager
+  namespace: <<please-set>>
+  labels:
+    app: update-manager
+spec:
+  replicas: 1
+  serviceAccountName: update-manager
+  selector:
+    matchLabels:
+      app: update-manager
+  template:
+    metadata:
+      labels:
+        app: update-manager
+    spec:
+      serviceAccountName: update-manager
+      containers:
+      - name: update-manager
+        image:  xcnt/kubernetes-update-manager:stable
+        imagePullPolicy: Always
+        env:
+        - name: UPDATE_MANAGER_API_KEY
+          valueFrom:
+            secretKeyRef:
+              key: api-key
+              name: update-manager-secret
+        ports:
+        - containerPort: 9000
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 1m
+            memory: 5Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi

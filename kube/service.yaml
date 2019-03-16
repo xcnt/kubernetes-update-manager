@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: update-manager
+  namespace: <<please set>>
+  labels:
+    app: update-manager
+spec:
+  ports:
+    - port: 80
+      targetPort: http
+      name: http
+  selector:
+    app: update-manager
+  type: ClusterIP
