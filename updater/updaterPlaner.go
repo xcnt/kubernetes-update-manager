@@ -68,9 +68,9 @@ func (updatePlaner *UpdatePlaner) updatedDeployments() []v1.Deployment {
 	deployments := updatePlaner.DeploymentLister()
 	updatedDeployments := make([]v1.Deployment, len(deployments))
 	for index, deployment := range deployments {
-		newDeployment := deployment.DeepCopy()
+		newDeployment := *deployment.DeepCopy()
 		newDeployment.Spec.Template.Spec = updatePlaner.updatePodSpec(newDeployment.Spec.Template.Spec)
-		updatedDeployments[index] = *newDeployment
+		updatedDeployments[index] = newDeployment
 	}
 	return updatedDeployments
 }
@@ -85,13 +85,13 @@ func (updatePlaner *UpdatePlaner) migrationJobs() []batchv1.Job {
 }
 
 func (updatePlaner *UpdatePlaner) createMigrationJob(job batchv1.Job) batchv1.Job {
-	clonedJob := job.DeepCopy()
+	clonedJob := *job.DeepCopy()
 	clonedJob.SetUID("")
 	clonedJob.SelfLink = ""
 	clonedJob.Name = fmt.Sprintf("%s-%s", clonedJob.Name, time.Now().Format("2006-01-02-15-04-05"))
 	delete(clonedJob.Annotations, UpdateClassifier)
 	clonedJob.Spec.Template.Spec = updatePlaner.updatePodSpec(clonedJob.Spec.Template.Spec)
-	return *clonedJob
+	return clonedJob
 }
 
 func (updatePlaner *UpdatePlaner) updatePodSpec(podSpec apiv1.PodSpec) apiv1.PodSpec {
