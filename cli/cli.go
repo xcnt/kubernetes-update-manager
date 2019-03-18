@@ -4,7 +4,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 
 	"gopkg.in/urfave/cli.v2"
 )
@@ -26,24 +26,25 @@ func New() *cli.App {
 		Name:    "kubernetes-update-manager",
 		Version: Version,
 		Flags:   []cli.Flag{FlagLogLevel},
-		Before: func(context *cli.Context) {
+		Before: func(context *cli.Context) error {
 			logLevel := context.String(FlagLogLevel.Name)
-			toApplyLogLevel := logrus.Info
+			toApplyLogLevel := log.InfoLevel
 			switch strings.ToLower(logLevel) {
 			case "debug":
-				toApplyLogLevel = logrus.DebugLevel
+				toApplyLogLevel = log.DebugLevel
 			case "warn":
-				toApplyLogLevel = logrus.WarnLevel
+				toApplyLogLevel = log.WarnLevel
 			case "error":
-				toApplyLogLevel = logrus.ErrorLevel
+				toApplyLogLevel = log.ErrorLevel
 			case "critical":
-				toApplyLogLevel = logrus.FatalLevel
+				toApplyLogLevel = log.FatalLevel
 			default:
-				toApplyLogLevel = logrus.InfoLevel
+				toApplyLogLevel = log.InfoLevel
 			}
 			log.SetFormatter(&log.JSONFormatter{})
 			log.SetOutput(os.Stdout)
 			log.SetLevel(toApplyLogLevel)
+			return nil
 		},
 		Commands: []*cli.Command{
 			ServerCommand(),
