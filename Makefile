@@ -16,3 +16,6 @@ lint: generate_swagger
 
 xunit: generate_swagger
 	bash ./scripts/run-xunit-tests.sh
+
+generatecligif:
+	docker run --rm -i -t -v $(CURDIR):/data asciinema/asciicast2gif -w 116 -h 7 images/update-command.rec images/update-command.gif

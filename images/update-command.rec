@@ -1,6 +1,6 @@
 {"version": 2, "width": 330, "height": 66, "timestamp": 1552700937, "env": {"SHELL": "/bin/bash", "TERM": "xterm-256color"}}
 [0.013329, "o", "\u001b[?1034hbash-3.2$ "]
-[1.011897, "o", "docker run --rm -t xcnt/kubernetes-update-manager:stable docker run --rm -t xcnt/kubernetes-update-manager:stable \\\r\n"]
+[1.011897, "o", "docker run --rm -t xcnt/kubernetes-update-manager:stable \\\r\n"]
 [1.111897, "o", "           update --url https://update-manager.example.org/updates \\\r\n"]
 [1.211897, "o", "           --image xcnt/example:1.0.0 --update-classifier stable --api-key example-api-key"]
 [1.424407, "o", "\r\n"]
