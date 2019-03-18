@@ -132,6 +132,7 @@ func monitorUpdate(status client.ExecutionStatus) error {
 	if currentStatus.Status.Failed {
 		err = errors.New("Update failed")
 		color.Error.Println(err.Error())
+		os.Exit(1)
 		return err
 	}
 	color.FgGreen.Println("Finished")
