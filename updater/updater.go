@@ -3,8 +3,10 @@ package updater
 import (
 	"errors"
 	"strconv"
+	"strings"
 	"time"
 
+	log "github.com/sirupsen/logrus"
 	v1 "k8s.io/api/apps/v1"
 	batchv1 "k8s.io/api/batch/v1"
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -138,6 +140,11 @@ func (up *updater) runUpdate() error {
 	updateProgressConfiguration := up.updateProgress
 	jobs := updatePlan.GetToCreateJobs()
 	for index, job := range jobs {
+		log.WithFields(log.Fields{
+			"name":      job.Name,
+			"namespace": job.Namespace,
+			"images":    strings.Join(GetImagesOf(job.Spec.Template.Spec), ", "),
+		}).Info("Creating job")
 		createdJob, err := kubernetesWrapper.GetJobAPIFor(job.Namespace).Create(&job)
 		updateProgressConfiguration.jobs[index] = createdJob
 		if err != nil {
@@ -148,6 +155,11 @@ func (up *updater) runUpdate() error {
 
 	deployments := updatePlan.GetToApplyDeployments()
 	for index, deployment := range deployments {
+		log.WithFields(log.Fields{
+			"name":      deployment.Name,
+			"namespace": deployment.Namespace,
+			"images":    strings.Join(GetImagesOf(deployment.Spec.Template.Spec), ", "),
+		}).Info("Updating deployment")
 		updatedDeployment, err := kubernetesWrapper.GetDeploymentAPIFor(deployment.Namespace).Update(&deployment)
 		if err != nil {
 			up.rollback()

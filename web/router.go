@@ -40,7 +40,7 @@ func GetWeb(config *Config) *gin.Engine {
 func getWeb(config *Config, useMiddlewares bool) (*gin.Engine, *manager.Manager) {
 	router := gin.New()
 	if useMiddlewares {
-		router.Use(gin.Logger(), gin.Recovery(), sentry.Recovery(raven.DefaultClient, false))
+		router.Use(Logger(), gin.Recovery(), sentry.Recovery(raven.DefaultClient, false))
 	}
 
 	mgr := registerRoutes(router, config)
