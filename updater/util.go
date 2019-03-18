@@ -5,16 +5,16 @@ import apiv1 "k8s.io/api/core/v1"
 // GetImagesOf returns all string images of the specified podspec.
 func GetImagesOf(podSpec apiv1.PodSpec) []string {
 	images := map[string]bool{}
-	fillStringMap(images, getContainerImagesOf(podSpec.Containers))
-	fillStringMap(images, getContainerImagesOf(podSpec.InitContainers))
+	images = fillStringMap(images, getContainerImagesOf(podSpec.Containers))
+	images = fillStringMap(images, getContainerImagesOf(podSpec.InitContainers))
 	return stringMapToSlice(images)
 }
 
-func fillStringMap(mapConfig map[string]bool, stringSlice []string) []string {
-	for container := range mapConfig {
-		stringSlice = append(stringSlice, container)
+func fillStringMap(mapConfig map[string]bool, stringSlice []string) map[string]bool {
+	for _, container := range stringSlice {
+		mapConfig[container] = true
 	}
-	return stringSlice
+	return mapConfig
 }
 
 func getContainerImagesOf(containers []apiv1.Container) []string {
