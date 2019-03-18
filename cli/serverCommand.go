@@ -59,7 +59,7 @@ var (
 		Name:    "sentry-dsn",
 		Usage:   "The sentry dsn which should be used when reporting errors from the server",
 		EnvVars: []string{"SENTRY_DSN"},
-	)
+	}
 
 	// ErrNoAPIKey is returned if no API Key has been provided for authentication purposes.
 	ErrNoAPIKey = errors.New("No API key provided for authenticating the server")
