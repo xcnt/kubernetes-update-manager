@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/getsentry/raven-go"
 	log "github.com/sirupsen/logrus"
 	v1 "k8s.io/api/apps/v1"
 	batchv1 "k8s.io/api/batch/v1"
@@ -139,30 +140,40 @@ func (up *updater) runUpdate() error {
 	kubernetesWrapper := up.kubernetesWrapper
 	updateProgressConfiguration := up.updateProgress
 	jobs := updatePlan.GetToCreateJobs()
+	deployments := updatePlan.GetToApplyDeployments()
+	log.WithFields(log.Fields{
+		"numJobs":        len(jobs),
+		"numDeployments": len(deployments),
+	}).Debug("Running update")
 	for index, job := range jobs {
-		log.WithFields(log.Fields{
+		jobLogger := log.WithFields(log.Fields{
 			"name":      job.Name,
 			"namespace": job.Namespace,
 			"images":    strings.Join(GetImagesOf(job.Spec.Template.Spec), ", "),
-		}).Info("Creating job")
+		})
+		jobLogger.Debug("Creating job")
 		createdJob, err := kubernetesWrapper.GetJobAPIFor(job.Namespace).Create(&job)
 		updateProgressConfiguration.jobs[index] = createdJob
 		if err != nil {
-			updateProgressConfiguration.failed = true
+			updateProgressConfiguration.Abort()
+			jobLogger.WithError(err).Error("Error while creating job")
+			raven.CaptureError(err, nil)
 			return err
 		}
 	}
 
-	deployments := updatePlan.GetToApplyDeployments()
 	for index, deployment := range deployments {
-		log.WithFields(log.Fields{
+		deploymentLogger := log.WithFields(log.Fields{
 			"name":      deployment.Name,
 			"namespace": deployment.Namespace,
 			"images":    strings.Join(GetImagesOf(deployment.Spec.Template.Spec), ", "),
-		}).Info("Updating deployment")
+		})
+		deploymentLogger.Debug("Updating deployment")
 		updatedDeployment, err := kubernetesWrapper.GetDeploymentAPIFor(deployment.Namespace).Update(&deployment)
 		if err != nil {
 			up.rollback()
+			deploymentLogger.WithError(err).Error("Error while updating a deployment")
+			raven.CaptureError(err, nil)
 			return err
 		}
 		updateProgressConfiguration.deployments[index] = updatedDeployment
@@ -218,7 +229,7 @@ func (up *updater) monitorJobs() error {
 			continue
 		}
 		if currentJob.Status.Failed > 0 {
-			status.failed = true
+			status.Abort()
 			return up.rollback()
 		}
 		currentJob.DeepCopyInto(job)
@@ -237,6 +248,11 @@ func (up *updater) rollback() error {
 }
 
 func (up *updater) rollbackDeployment(deployment *v1.Deployment) error {
+	log.WithFields(log.Fields{
+		"namespace": deployment.Namespace,
+		"type":      "deployment",
+		"name":      deployment.Name,
+	}).Debug("Rolling back deployment")
 	kubernetes := up.kubernetesWrapper
 	replicaSetFinder := NewReplicaSetFinder(kubernetes)
 	replicaSets, err := replicaSetFinder.GetSetsFor(deployment)

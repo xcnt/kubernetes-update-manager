@@ -1,6 +1,7 @@
 package updater
 
 import (
+	. "github.com/cbrand/gocheck_matchers"
 	. "gopkg.in/check.v1"
 	v1 "k8s.io/api/apps/v1"
 	batchv1 "k8s.io/api/batch/v1"
@@ -86,6 +87,25 @@ func (suite *UpdatePlanerSuite) TestPlanJobInitContainer(c *C) {
 	initContainers := job.Spec.Template.Spec.InitContainers
 	c.Assert(len(initContainers), Equals, 1)
 	c.Assert(initContainers[0].Image, Equals, "xcnt/test:1.0.0")
+}
+
+func (suite *UpdatePlanerSuite) TestPlanJobWithPreExistingLabels(c *C) {
+	job := suite.jobs[0]
+	job.Spec.Template.ObjectMeta.SetLabels(map[string]string{
+		controllerUUIDLabel: "abc",
+	})
+	suite.jobs[0] = job
+	job = suite.verfiyPlanedJob(c)
+	_, ok := job.Spec.Template.ObjectMeta.GetLabels()[controllerUUIDLabel]
+	c.Assert(ok, IsFalse)
+}
+
+func (suite *UpdatePlanerSuite) TestResourceVersionRemoval(c *C) {
+	job := suite.jobs[0]
+	job.ResourceVersion = "test"
+	suite.jobs[0] = job
+	job = suite.verfiyPlanedJob(c)
+	c.Assert(job.ResourceVersion, Equals, "")
 }
 
 func (suite *UpdatePlanerSuite) TestPlanFunction(c *C) {

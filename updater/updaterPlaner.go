@@ -9,6 +9,12 @@ import (
 	apiv1 "k8s.io/api/core/v1"
 )
 
+const (
+	controllerUUIDLabel = "controller-uid"
+	jobNameLabel        = "job-name"
+	nameLabel           = "name"
+)
+
 // Plan returns an UpdatePlan for the specified configuration
 func Plan(config *Config) (UpdatePlan, error) {
 	deployments, err := NewDeploymentFinder(config).List()
@@ -89,7 +95,18 @@ func (updatePlaner *UpdatePlaner) createMigrationJob(job batchv1.Job) batchv1.Jo
 	clonedJob.SetUID("")
 	clonedJob.SelfLink = ""
 	clonedJob.Name = fmt.Sprintf("%s-%s", clonedJob.Name, time.Now().Format("2006-01-02-15-04-05"))
+	clonedJob.ResourceVersion = ""
 	delete(clonedJob.Annotations, UpdateClassifier)
+	labels := clonedJob.Spec.Template.ObjectMeta.GetLabels()
+	if labels == nil {
+		labels = map[string]string{}
+	}
+	for _, key := range []string{controllerUUIDLabel, nameLabel} {
+		delete(labels, key)
+	}
+	labels[jobNameLabel] = clonedJob.Name
+	clonedJob.Spec.Template.ObjectMeta.SetLabels(labels)
+	clonedJob.Spec.Selector = nil
 	clonedJob.Spec.Template.Spec = updatePlaner.updatePodSpec(clonedJob.Spec.Template.Spec)
 	return clonedJob
 }
