@@ -55,6 +55,7 @@ func (suite *UpdaterSuite) TestUpdaterFailure(c *C) {
 	time.Sleep(100 * time.Millisecond)
 	suite.kubernetesAPI.UpdateJobIn("default", job)
 	suite.waitForFinish(progress)
+	c.Assert(progress.FinishTime(), NotNil)
 	c.Assert(progress.Finished(), Equals, true)
 	c.Assert(progress.Successful(), Equals, false)
 	c.Assert(progress.Failed(), Equals, true)

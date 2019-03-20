@@ -45,6 +45,9 @@ dockerBuildRuntime(label: label) {
             finally {
                 junit '**/xunit.xml'
                 cobertura coberturaReportFile: '**/coverage.xml'
+                if (currentBuild.result == 'UNSTABLE') {
+                    currentBuild.result = 'FAILURE'
+                }
             }
         }
     }
