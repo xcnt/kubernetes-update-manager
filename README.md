@@ -4,10 +4,14 @@
 
 This code allows to update deployments in a kubernetes cluster without needing to give cluster admin access to the updating entity. Instead an API is provided which handles the update process via pre-defined annotations in the specified deployment structure.
 
+## Motivation ##
+
+We wrote a blog article on our website to explain why we think this feature is needed. [Check it out](https://xcnt.io/story/releasing-the-kubernetes-update-manager-as-open-source).
+
 ## Installation ##
 
 Currently it is expected for the update manager to run in the same cluster in which the upgrades should be applied.
-The image is available on [Docker Hub](https://cloud.docker.com/u/xcnt/repository/docker/xcnt/kubernetes-update-manager) for installation. 
+The image is available on [Docker Hub](https://cloud.docker.com/u/xcnt/repository/docker/xcnt/kubernetes-update-manager) for installation.
 Example deployments can be found in the [kube](kube) folder. You must adjust the secret to set an api key and additionally adjust the namespace where
 you want to update-manager to run in. Additionally, if you want the update-manager to be accessible externally you should expose the manager. This can
 be for example done with an [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) configuration.
@@ -105,7 +109,7 @@ spec:
         image:  xcnt/kubernetes-update-manager:stable
 ```
 
-Additionally, it is possible to specify migration jobs for the image which should be updated. This can be done by adding a job with the given image and also 
+Additionally, it is possible to specify migration jobs for the image which should be updated. This can be done by adding a job with the given image and also
 adding a `xcnt.io/update-classifier` annotation. For example:
 ```yaml
 apiVersion: batch/v1
@@ -130,7 +134,7 @@ If a update call is done with the classifier `stable` and the image `xcnt/test` 
 
 ## Error Handling ##
 
-If a deployment doesn't start or a job fails, a rollback of the deployments will be attempted. However, this does not reverse any jobs which have already been executed, 
+If a deployment doesn't start or a job fails, a rollback of the deployments will be attempted. However, this does not reverse any jobs which have already been executed,
 meaning the state of the application might need manual work to be restored to a previously compatible version.
 
 ## License ##
