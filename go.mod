@@ -32,16 +32,14 @@ require (
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/sirupsen/logrus v1.4.0
 	github.com/swaggo/gin-swagger v1.1.0
-	github.com/swaggo/swag v1.4.0
+	github.com/swaggo/swag v1.7.1
 	github.com/t-yuki/gocover-cobertura v0.0.0-20180217150009-aaee18c8195c // indirect
 	github.com/tebeka/go2xunit v1.4.10 // indirect
 	github.com/ugorji/go/codec v0.0.0-20190309163734-c4a1c341dc93 // indirect
-	golang.org/x/crypto v0.0.0-20190228050851-31a38585487a // indirect
 	golang.org/x/lint v0.0.0-20190301231843-5614ed5bae6f // indirect
-	golang.org/x/net v0.0.0-20190227160552-c95aed5357e7 // indirect
 	golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421 // indirect
 	golang.org/x/time v0.0.0-20181108054448-85acf8d2951c // indirect
-	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127
+	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/jarcoal/httpmock.v1 v1.0.0-20190314184232-a8ac0a50d0b5
 	gopkg.in/urfave/cli.v2 v2.0.0-20180128182452-d3ae77c26ac8
