@@ -1,5 +1,5 @@
 generate_swagger:
-	swag init --generalInfo web/router.go --dir ./web --swagger web/docs/swagger/
+	swag init --generalInfo web/router.go --output web/docs
 
 generate_mocks:
 	@echo "Building mocks"
