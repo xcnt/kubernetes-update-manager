@@ -80,7 +80,7 @@ add `/swagger` (so for example https://up.xcnt.io/swagger). Alternatively, it is
 provided by the update manager itself:
 
 ```bash
-docker run --rm -t xcnt/kubernetes-update-manager:stable --url https://up.xcnt.io/updates --image xcnt/kubernetes-update-manager:1.0.0 --update-classifier stable
+docker run --rm -t xcnt/kubernetes-update-manager:stable update --url https://up.xcnt.io/updates --image xcnt/kubernetes-update-manager:1.0.0 --update-classifier stable
 ```
 
 This would notify the update manager to update itself, if the following annotation has been put on the deployment:
