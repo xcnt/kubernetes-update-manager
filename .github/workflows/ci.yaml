@@ -1,0 +1,190 @@
+name: ci
+
+on: [push]
+
+jobs:
+  docker:
+    runs-on: self-hosted
+    steps:
+      - name: Login to GCR
+        uses: docker/login-action@v1
+        with:
+          registry: eu.gcr.io
+          username: _json_key
+          password: ${{ secrets.GCR_REGISTRY_SECRET }}
+      - name: Checkout GitHub Action Repo
+        uses: actions/checkout@v2
+        with:
+          repository: xcnt/ghaction-docker-meta
+          ref: master
+          token: ${{ secrets.CI_AUTH_TOKEN }} # stored in GitHub secrets
+          path: .github/actions/docker-meta
+      - name: Docker meta
+        id: docker_meta
+        uses: ./.github/actions/docker-meta
+        with:
+          images: |
+            eu.gcr.io/xcnt-infrastructure/kubernetes-update-manager-build
+      - name: Create Docker Context
+        run: docker context create buildx
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          endpoint: buildx
+      - name: Build
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ${{ steps.docker_meta.outputs.buildTags }}
+          cache-from: type=registry,ref=${{ steps.docker_meta.outputs.cacheTag }}
+          cache-to: type=inline
+  docker_test:
+    runs-on: self-hosted
+    steps:
+      - name: Login to GCR
+        uses: docker/login-action@v1
+        with:
+          registry: eu.gcr.io
+          username: _json_key
+          password: ${{ secrets.GCR_REGISTRY_SECRET }}
+      - name: Checkout GitHub Action Repo
+        uses: actions/checkout@v2
+        with:
+          repository: xcnt/ghaction-docker-meta
+          ref: master
+          token: ${{ secrets.CI_AUTH_TOKEN }} # stored in GitHub secrets
+          path: .github/actions/docker-meta
+      - name: Docker meta
+        id: docker_meta
+        uses: ./.github/actions/docker-meta
+        with:
+          images: |
+            eu.gcr.io/xcnt-infrastructure/kubernetes-update-manager-build-test
+      - name: Create Docker Context
+        run: docker context create buildx
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          endpoint: buildx
+      - name: Build
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          dockerfile: Dockerfile-test
+          tags: ${{ steps.docker_meta.outputs.buildTags }}
+          cache-from: type=registry,ref=${{ steps.docker_meta.outputs.cacheTag }}
+          cache-to: type=inline
+  lint:
+    runs-on: self-hosted
+    needs: [docker_test]
+    timeout-minutes: 30
+    steps:
+      - name: Login to GCR
+        uses: docker/login-action@v1
+        with:
+          registry: eu.gcr.io
+          username: _json_key
+          password: ${{ secrets.GCR_REGISTRY_SECRET }}
+      - name: Checkout GitHub Action Repo
+        uses: actions/checkout@v2
+        with:
+          repository: xcnt/ghaction-docker-meta
+          ref: master
+          token: ${{ secrets.CI_AUTH_TOKEN }} # stored in GitHub secrets
+          path: .github/actions/docker-meta
+      - name: Docker meta
+        id: docker_meta
+        uses: ./.github/actions/docker-meta
+        with:
+          images: |
+            eu.gcr.io/xcnt-infrastructure/kubernetes-update-manager-build-test
+      - uses: actions/checkout@v2
+      - name: Run Linter
+        run: |
+          docker run --rm -i -t ${{ steps.docker_meta.outputs.buildTag }} make lint
+  tests:
+    runs-on: self-hosted
+    needs: [docker_test]
+    timeout-minutes: 30
+    steps:
+      - name: Login to GCR
+        uses: docker/login-action@v1
+        with:
+          registry: eu.gcr.io
+          username: _json_key
+          password: ${{ secrets.GCR_REGISTRY_SECRET }}
+      - name: Checkout GitHub Action Repo
+        uses: actions/checkout@v2
+        with:
+          repository: xcnt/ghaction-docker-meta
+          ref: master
+          token: ${{ secrets.CI_AUTH_TOKEN }} # stored in GitHub secrets
+          path: .github/actions/docker-meta
+      - name: Docker meta
+        id: docker_meta
+        uses: ./.github/actions/docker-meta
+        with:
+          images: |
+            eu.gcr.io/xcnt-infrastructure/kubernetes-update-manager-build-test
+      - uses: actions/checkout@v2
+      - name: Run Unit Tests
+        run: |
+          docker run --rm -i -t ${{ steps.docker_meta.outputs.buildTag }} make xunit
+      - name: XUnit Viewer
+        id: xunit-viewer
+        uses: AutoModality/action-xunit-viewer@v1
+      - name: Attach the report
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ steps.xunit-viewer.outputs.report-name }}
+          path: ${{ steps.xunit-viewer.outputs.report-dir }}
+  publish-to-docker:
+    runs-on: self-hosted
+    needs: [docker, lint, tests]
+    steps:
+      - name: Login to GCR
+        uses: docker/login-action@v1
+        with:
+          registry: eu.gcr.io
+          username: _json_key
+          password: ${{ secrets.GCR_REGISTRY_SECRET }}
+      - name: Checkout GitHub Action Repo
+        uses: actions/checkout@v2
+        with:
+          repository: xcnt/ghaction-docker-meta
+          ref: master
+          token: ${{ secrets.CI_AUTH_TOKEN }} # stored in GitHub secrets
+          path: .github/actions/docker-meta
+      - name: Docker meta
+        id: docker_meta
+        uses: ./.github/actions/docker-meta
+        with:
+          images: |
+            eu.gcr.io/xcnt-infrastructure/kubernetes-update-manager-build
+      - name: Docker meta publish
+        id: docker_meta_publish
+        uses: ./.github/actions/docker-meta
+        with:
+          images: |
+            eu.gcr.io/xcnt-infrastructure/kubernetes-update-manager
+            xcnt/kubernetes-update-manager
+      - name: Create Docker Context
+        run: docker context create buildx
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          endpoint: buildx
+      - name: Build
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.docker_meta_publish.outputs.tags }}
+          labels: ${{ steps.docker_meta_publish.outputs.labels }}
+          cache-from: type=registry,ref=${{ steps.docker_meta.outputs.buildTag }}
+          cache-to: type=inline
