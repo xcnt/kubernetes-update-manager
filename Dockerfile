@@ -2,11 +2,10 @@ FROM golang:1.17-alpine AS build-env
 
 WORKDIR /app
 
-ENV GOFLAGS -mod=vendor
 RUN apk update && apk add --no-cache git alpine-sdk bash
 RUN apk add --no-cache ca-certificates && update-ca-certificates
 RUN adduser -D -g '' appuser
-RUN go get github.com/swaggo/swag/cmd/swag && go install github.com/swaggo/swag/cmd/swag
+RUN go install github.com/swaggo/swag/cmd/swag@latest
 
 ADD . /app
 RUN make generate_swagger
