@@ -1,6 +1,7 @@
 package updater
 
 import (
+	"context"
 	"strconv"
 	"time"
 
@@ -119,7 +120,7 @@ func (suite *UpdaterSuite) TestFailureWithReplicaSets(c *C) {
 	suite.waitForFinish(progress)
 
 	time.Sleep(300 * time.Millisecond)
-	retrievedDeployment, err := suite.config.GetDeploymentAPIFor("default").Get(deployment.Name, metaV1.GetOptions{})
+	retrievedDeployment, err := suite.config.GetDeploymentAPIFor("default").Get(context.TODO(), deployment.Name, metaV1.GetOptions{})
 	c.Assert(err, IsNil)
 	c.Assert(retrievedDeployment.Spec.Template.Spec.Containers[0].Name, Equals, previousRS.Spec.Template.Spec.Containers[0].Name)
 }
@@ -158,18 +159,18 @@ func (suite *UpdaterSuite) TestUpdateAbort(c *C) {
 }
 
 func (suite *UpdaterSuite) waitForJobToFinish(job *batchv1.Job) {
-	job, _ = suite.config.GetJobAPIFor(job.Namespace).Get(job.Name, metaV1.GetOptions{})
+	job, _ = suite.config.GetJobAPIFor(job.Namespace).Get(context.TODO(), job.Name, metaV1.GetOptions{})
 	for i := 0; i < 20 && job.Status.Succeeded == 0; i++ {
 		time.Sleep(100 * time.Millisecond)
-		job, _ = suite.config.GetJobAPIFor(job.Namespace).Get(job.Name, metaV1.GetOptions{})
+		job, _ = suite.config.GetJobAPIFor(job.Namespace).Get(context.TODO(), job.Name, metaV1.GetOptions{})
 	}
 }
 
 func (suite *UpdaterSuite) waitForDeploymentToFinish(deployment *v1.Deployment) {
-	deployment, _ = suite.config.GetDeploymentAPIFor(deployment.Namespace).Get(deployment.Name, metaV1.GetOptions{})
+	deployment, _ = suite.config.GetDeploymentAPIFor(deployment.Namespace).Get(context.TODO(), deployment.Name, metaV1.GetOptions{})
 	for i := 0; i < 20 && !isDeploymentFinished(deployment); i++ {
 		time.Sleep(100 * time.Millisecond)
-		deployment, _ = suite.config.GetDeploymentAPIFor(deployment.Namespace).Get(deployment.Name, metaV1.GetOptions{})
+		deployment, _ = suite.config.GetDeploymentAPIFor(deployment.Namespace).Get(context.TODO(), deployment.Name, metaV1.GetOptions{})
 	}
 }
 

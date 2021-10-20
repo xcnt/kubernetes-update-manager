@@ -1,6 +1,8 @@
 package web
 
 import (
+	ctx "context"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gookit/color"
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -15,7 +17,7 @@ import (
 func CheckHealth(config *Config) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		clientSet := config.Clientset
-		_, err := clientSet.AppsV1().Deployments("default").List(metaV1.ListOptions{})
+		_, err := clientSet.AppsV1().Deployments("default").List(ctx.TODO(), metaV1.ListOptions{})
 		if err != nil {
 			color.Error.Println(err.Error())
 			context.Status(500)

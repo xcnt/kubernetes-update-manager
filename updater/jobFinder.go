@@ -1,6 +1,8 @@
 package updater
 
 import (
+	"context"
+
 	batchv1 "k8s.io/api/batch/v1"
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -33,7 +35,7 @@ func (jobFinder *JobFinder) List() ([]batchv1.Job, error) {
 // ListFor returns the migration jobs in the specified namespace
 func (jobFinder *JobFinder) ListFor(namespace string) ([]batchv1.Job, error) {
 	jobAPI := jobFinder.GetJobAPIFor(namespace)
-	response, err := jobAPI.List(metaV1.ListOptions{})
+	response, err := jobAPI.List(context.TODO(), metaV1.ListOptions{})
 	jobs := make([]batchv1.Job, 0)
 	if err != nil {
 		return jobs, err

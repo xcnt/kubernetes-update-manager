@@ -1,6 +1,7 @@
 package updater
 
 import (
+	"context"
 	"errors"
 	"strconv"
 	"strings"
@@ -152,7 +153,7 @@ func (up *updater) runUpdate() error {
 			"images":    strings.Join(GetImagesOf(job.Spec.Template.Spec), ", "),
 		})
 		jobLogger.Debug("Creating job")
-		createdJob, err := kubernetesWrapper.GetJobAPIFor(job.Namespace).Create(&job)
+		createdJob, err := kubernetesWrapper.GetJobAPIFor(job.Namespace).Create(context.TODO(), &job, metaV1.CreateOptions{})
 		updateProgressConfiguration.jobs[index] = createdJob
 		if err != nil {
 			updateProgressConfiguration.Abort()
@@ -169,7 +170,7 @@ func (up *updater) runUpdate() error {
 			"images":    strings.Join(GetImagesOf(deployment.Spec.Template.Spec), ", "),
 		})
 		deploymentLogger.Debug("Updating deployment")
-		updatedDeployment, err := kubernetesWrapper.GetDeploymentAPIFor(deployment.Namespace).Update(&deployment)
+		updatedDeployment, err := kubernetesWrapper.GetDeploymentAPIFor(deployment.Namespace).Update(context.TODO(), &deployment, metaV1.UpdateOptions{})
 		if err != nil {
 			up.rollback()
 			deploymentLogger.WithError(err).Error("Error while updating a deployment")
@@ -211,7 +212,7 @@ func (up *updater) monitorChanges() error {
 func (up *updater) monitorDeployments() error {
 	kubernetesAPI := up.kubernetesWrapper
 	for _, deployment := range up.updateProgress.GetDeployments() {
-		currentDeployment, err := kubernetesAPI.GetDeploymentAPIFor(deployment.Namespace).Get(deployment.Name, metaV1.GetOptions{})
+		currentDeployment, err := kubernetesAPI.GetDeploymentAPIFor(deployment.Namespace).Get(context.TODO(), deployment.Name, metaV1.GetOptions{})
 		if err != nil {
 			continue
 		}
@@ -224,7 +225,7 @@ func (up *updater) monitorJobs() error {
 	kubernetesAPI := up.kubernetesWrapper
 	status := up.updateProgress
 	for _, job := range up.updateProgress.GetJobs() {
-		currentJob, err := kubernetesAPI.GetJobAPIFor(job.Namespace).Get(job.Name, metaV1.GetOptions{})
+		currentJob, err := kubernetesAPI.GetJobAPIFor(job.Namespace).Get(context.TODO(), job.Name, metaV1.GetOptions{})
 		if err != nil {
 			continue
 		}
@@ -279,7 +280,7 @@ func (up *updater) rollbackDeployment(deployment *v1.Deployment) error {
 	deployment.Spec.Template = toRollbackReplicaSet.Spec.Template
 
 	deploymentAPI := up.kubernetesWrapper.GetDeploymentAPIFor(deployment.Namespace)
-	_, err = deploymentAPI.Update(deployment)
+	_, err = deploymentAPI.Update(context.TODO(), deployment, metaV1.UpdateOptions{})
 	return err
 }
 

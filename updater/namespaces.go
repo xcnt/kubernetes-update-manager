@@ -1,6 +1,8 @@
 package updater
 
 import (
+	"context"
+
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	corev1 "k8s.io/client-go/kubernetes/typed/core/v1"
 )
@@ -14,7 +16,7 @@ type NamespaceAPIGetter interface {
 // ListNamespaces returns a list of all namespaces which are in the cluster
 func ListNamespaces(config NamespaceAPIGetter) ([]string, error) {
 	namespacesAPI := config.GetNamespacesAPI()
-	namespaces, err := namespacesAPI.List(metaV1.ListOptions{})
+	namespaces, err := namespacesAPI.List(context.TODO(), metaV1.ListOptions{})
 	if err != nil {
 		return make([]string, 0), err
 	}

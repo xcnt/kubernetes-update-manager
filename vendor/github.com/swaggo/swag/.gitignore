@@ -1,6 +1,11 @@
-swag
-testdata/simple/docs
+dist
+testdata/simple*/docs
+testdata/quotes/docs
+testdata/quotes/quotes.so
+example/basic/docs/*
+example/celler/docs/*
 cover.out
+
 
 # Test binary, build with `go test -c`
 *.test
@@ -12,3 +17,6 @@ cover.out
 
 # Etc
 .DS_Store
+
+/swag
+/swag.exe

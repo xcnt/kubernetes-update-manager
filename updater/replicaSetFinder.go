@@ -1,6 +1,7 @@
 package updater
 
 import (
+	"context"
 	"sort"
 	"strconv"
 
@@ -48,7 +49,7 @@ func (rsFinder *ReplicaSetFinder) GetSetsFor(deployment *v1.Deployment) ([]v1.Re
 // the revisions in ascending order.
 func (rsFinder *ReplicaSetFinder) GetSetsForNamespace(name string) ([]v1.ReplicaSet, error) {
 	replicaSetAPI := rsFinder.wrapper.GetReplicaSetAPIFor(name)
-	replicaSets, err := replicaSetAPI.List(metaV1.ListOptions{})
+	replicaSets, err := replicaSetAPI.List(context.TODO(), metaV1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}

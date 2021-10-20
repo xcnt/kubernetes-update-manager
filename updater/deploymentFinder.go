@@ -1,6 +1,8 @@
 package updater
 
 import (
+	"context"
+
 	v1 "k8s.io/api/apps/v1"
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -34,7 +36,7 @@ func (deploymentFinder *DeploymentFinder) List() ([]v1.Deployment, error) {
 // ListFor lists all deployments for the specified namespace and returns the configurations
 func (deploymentFinder *DeploymentFinder) ListFor(namespace string) ([]v1.Deployment, error) {
 	deploymentAPI := deploymentFinder.config.GetDeploymentAPIFor(namespace)
-	response, err := deploymentAPI.List(metaV1.ListOptions{})
+	response, err := deploymentAPI.List(context.TODO(), metaV1.ListOptions{})
 	if err != nil {
 		return make([]v1.Deployment, 0), err
 	}
