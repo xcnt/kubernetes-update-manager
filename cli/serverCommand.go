@@ -7,9 +7,10 @@ import (
 
 	"github.com/getsentry/raven-go"
 
-	"gopkg.in/urfave/cli.v2"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+
+	cli "github.com/urfave/cli/v2"
 )
 
 var (

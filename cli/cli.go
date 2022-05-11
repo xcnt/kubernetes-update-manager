@@ -5,8 +5,7 @@ import (
 	"strings"
 
 	log "github.com/sirupsen/logrus"
-
-	"gopkg.in/urfave/cli.v2"
+	cli "github.com/urfave/cli/v2"
 )
 
 var (

@@ -1,4 +1,4 @@
-FROM golang:1.17-alpine AS build-env
+FROM golang:1.18-alpine AS build-env
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ ADD . /app
 RUN make generate_swagger
 RUN GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o kubernetes-update-manager
 
-FROM alpine:3.9
+FROM alpine:3.15
 WORKDIR /app
 COPY --from=build-env /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build-env /etc/passwd /etc/passwd
