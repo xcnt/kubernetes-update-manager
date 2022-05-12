@@ -5,7 +5,7 @@ WORKDIR /app
 RUN apk update && apk add --no-cache git alpine-sdk bash
 RUN apk add --no-cache ca-certificates && update-ca-certificates
 RUN adduser -D -g '' appuser
-RUN go install github.com/swaggo/swag/cmd/swag@latest
+RUN go install github.com/swaggo/swag/cmd/swag@v1.8.1
 
 ADD . /app
 RUN make generate_swagger
