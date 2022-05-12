@@ -15,6 +15,16 @@ const (
 	nameLabel           = "name"
 )
 
+func generateJobName(jobName string) string {
+	dateFormat := "2006-01-02-15-04-05"
+	maxJobNameSize := 63 - len(dateFormat)
+	if len(jobName) > maxJobNameSize {
+		jobName = jobName[:maxJobNameSize]
+	}
+	jobName = fmt.Sprintf("%s-%s", jobName, time.Now().Format("2006-01-02-15-04-05"))
+	return jobName
+}
+
 // Plan returns an UpdatePlan for the specified configuration
 func Plan(config *Config) (UpdatePlan, error) {
 	deployments, err := NewDeploymentFinder(config).List()
@@ -94,7 +104,7 @@ func (updatePlaner *UpdatePlaner) createMigrationJob(job batchv1.Job) batchv1.Jo
 	clonedJob := *job.DeepCopy()
 	clonedJob.SetUID("")
 	clonedJob.SelfLink = ""
-	clonedJob.Name = fmt.Sprintf("%s-%s", clonedJob.Name, time.Now().Format("2006-01-02-15-04-05"))
+	clonedJob.Name = generateJobName(clonedJob.Name)
 	clonedJob.ResourceVersion = ""
 	delete(clonedJob.Annotations, UpdateClassifier)
 	labels := clonedJob.Spec.Template.ObjectMeta.GetLabels()

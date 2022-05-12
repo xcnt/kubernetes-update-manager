@@ -10,7 +10,8 @@ import (
 
 	"github.com/gookit/color"
 	"github.com/gosuri/uiprogress"
-	"gopkg.in/urfave/cli.v2"
+
+	cli "github.com/urfave/cli/v2"
 )
 
 var (
