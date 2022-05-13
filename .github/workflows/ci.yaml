@@ -163,7 +163,6 @@ jobs:
         with:
           images: |
             eu.gcr.io/xcnt-infrastructure/kubernetes-update-manager
-            xcnt/kubernetes-update-manager
       - name: Create Docker Context
         run: docker context create buildx
       - name: Set up Docker Buildx
