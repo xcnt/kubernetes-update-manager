@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"kubernetes-update-manager/web"
+	"strings"
 
 	"github.com/getsentry/raven-go"
 
@@ -108,7 +109,7 @@ func ServerAction(c *cli.Context) error {
 // webConfigFromContext takes the cli context for the web server, checks for necessary options and returns an initialized web configuration option.
 func webConfigFromContext(c *cli.Context) (*web.Config, error) {
 	config := web.Config{}
-	config.APIKey = c.String(FlagAPIKey.Name)
+	config.APIKey = strings.TrimSpace(c.String(FlagAPIKey.Name))
 	if len(config.APIKey) == 0 {
 		return nil, ErrNoAPIKey
 	}
