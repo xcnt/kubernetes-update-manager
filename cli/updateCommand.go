@@ -6,6 +6,7 @@ import (
 	"kubernetes-update-manager/client"
 	"kubernetes-update-manager/web"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gookit/color"
@@ -145,7 +146,7 @@ func updateCommandFromContext(c *cli.Context) *client.UpdateCommand {
 		TargetEndpoint:   c.String(FlagURL.Name),
 		Image:            c.String(FlagImage.Name),
 		UpdateClassifier: c.String(FlagUpdateClassifier.Name),
-		APIKey:           c.String(FlagAPIKey.Name),
+		APIKey:           strings.TrimSpace(c.String(FlagAPIKey.Name)),
 	}
 }
 
