@@ -1,0 +1,25 @@
+name: kubernetes-update-manager
+description: 'Updates kubernetes deployments with new image versions.'
+inputs:
+  url:
+    description: 'The url where the update manager resides in. This must be the complete path!'
+    required: true
+  image:
+    description: 'The docker image which should be updated.'
+    required: true
+  update-classifier:
+    description: 'The update classifier which should be sent to the server for update.'
+    required: true
+  api-key:
+    description: 'The pre-shared API key used to authenticate API calls.'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - update
+  env:
+    UPDATE_MANAGER_URL: ${{ inputs.url }}
+    UPDATE_MANAGER_IMAGE: ${{ inputs.image }}
+    UPDATE_MANAGER_CLASSIFIER: ${{ inputs.update-classifier }}
+    UPDATE_MANAGER_API_KEY: ${{ inputs.api-key }}
