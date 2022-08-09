@@ -13,7 +13,7 @@ jobs:
           username: _json_key
           password: ${{ secrets.GCR_REGISTRY_SECRET }}
       - name: Checkout GitHub Action Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: xcnt/ghaction-docker-meta
           ref: master
@@ -50,7 +50,7 @@ jobs:
           username: _json_key
           password: ${{ secrets.GCR_REGISTRY_SECRET }}
       - name: Checkout GitHub Action Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: xcnt/ghaction-docker-meta
           ref: master
@@ -90,7 +90,7 @@ jobs:
           username: _json_key
           password: ${{ secrets.GCR_REGISTRY_SECRET }}
       - name: Checkout GitHub Action Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: xcnt/ghaction-docker-meta
           ref: master
@@ -102,7 +102,7 @@ jobs:
         with:
           images: |
             eu.gcr.io/xcnt-infrastructure/kubernetes-update-manager-build-test
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Run Linter
         run: |
           docker run --rm ${{ steps.docker_meta.outputs.buildTag }} make lint
@@ -118,7 +118,7 @@ jobs:
           username: _json_key
           password: ${{ secrets.GCR_REGISTRY_SECRET }}
       - name: Checkout GitHub Action Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: xcnt/ghaction-docker-meta
           ref: master
@@ -130,7 +130,7 @@ jobs:
         with:
           images: |
             eu.gcr.io/xcnt-infrastructure/kubernetes-update-manager-build-test
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Run Unit Tests
         run: |
           docker run --rm ${{ steps.docker_meta.outputs.buildTag }} make xunit
@@ -145,7 +145,7 @@ jobs:
           username: _json_key
           password: ${{ secrets.GCR_REGISTRY_SECRET }}
       - name: Checkout GitHub Action Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: xcnt/ghaction-docker-meta
           ref: master
