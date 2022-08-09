@@ -33,7 +33,7 @@ The server can additionally be configured with the following environment variabl
 </thead>
 <tbody>
 <tr>
-<td><code>UPDATE_MANGER_LISTENING_HOST</code></td>
+<td><code>UPDATE_MANAGER_LISTENING_HOST</code></td>
 <td>The host to bind the server to.</td>
 <td><code>0.0.0.0</code></td>
 <td><code>true</code></td>

@@ -21,7 +21,7 @@ var (
 		Value:       "0.0.0.0",
 		DefaultText: "Listens to all hosts in default",
 		Usage:       "The host where the application should listen to",
-		EnvVars:     []string{"UPDATE_MANGER_LISTENING_HOST"},
+		EnvVars:     []string{"UPDATE_MANAGER_LISTENING_HOST"},
 	}
 	// FlagPort is used to configure the listening port when running a server
 	FlagPort = &cli.IntFlag{

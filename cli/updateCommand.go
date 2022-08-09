@@ -20,21 +20,21 @@ var (
 	FlagURL = &cli.StringFlag{
 		Name:    "url",
 		Usage:   "The url where the update manager resides in. This must be the complete path! Use http://xcnt.io/updates instead of https://xcnt.io/",
-		EnvVars: []string{"UPDATE_MANGER_URL"},
+		EnvVars: []string{"UPDATE_MANAGER_URL"},
 	}
 	// FlagImage represents the image which should be executed
 	FlagImage = &cli.StringFlag{
 		Name:    "image",
 		Aliases: []string{"u"},
 		Usage:   "The docker image which should be updated.",
-		EnvVars: []string{"UPDATE_MANGER_IMAGE"},
+		EnvVars: []string{"UPDATE_MANAGER_IMAGE"},
 	}
 	// FlagUpdateClassifier is the update classifier flag which should be sent to the server
 	FlagUpdateClassifier = &cli.StringFlag{
 		Name:    "update-classifier",
 		Aliases: []string{"c", "classifier"},
 		Usage:   "The update classifier which should be sent to the server for update.",
-		EnvVars: []string{"UPDATE_MANGER_UPDATE_CLASSIFIER", "UPDATE_MANGER_CLASSIFIER"},
+		EnvVars: []string{"UPDATE_MANAGER_UPDATE_CLASSIFIER", "UPDATE_MANAGER_CLASSIFIER"},
 	}
 
 	// ErrNoTargetEndpoint is returned if no target endpoint is provided
