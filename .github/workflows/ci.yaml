@@ -34,7 +34,7 @@ jobs:
           endpoint: buildx
       - name: Build
         id: docker_build
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           push: true
           tags: ${{ steps.docker_meta.outputs.buildTags }}
@@ -71,7 +71,7 @@ jobs:
           endpoint: buildx
       - name: Build
         id: docker_build
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           push: true
           file: Dockerfile-test
@@ -172,7 +172,7 @@ jobs:
           endpoint: buildx
       - name: Build
         id: docker_build
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.docker_meta_publish.outputs.tags }}
